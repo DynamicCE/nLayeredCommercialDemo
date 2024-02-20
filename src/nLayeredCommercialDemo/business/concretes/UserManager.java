@@ -1,9 +1,9 @@
 package nLayeredCommercialDemo.business.concretes;
 
 import nLayeredCommercialDemo.business.abstracts.UserService;
+import nLayeredCommercialDemo.core.abstracts.AuthService;
+import nLayeredCommercialDemo.core.concretes.GoogleAuthService;
 import nLayeredCommercialDemo.dataAccess.abstracts.UserDao;
-import nLayeredCommercialDemo.dataAccess.concretes.HibarnateUserDao;
-import nLayeredCommercialDemo.entities.concretes.User;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,10 +16,12 @@ class UserManager implements UserService {
     // 1- interface'i tanımla
     // 2- constructor oluştur
     private UserDao userDao;
+    private AuthService authService;
 
     public
-    UserManager ( UserDao userDao ) {
+    UserManager ( UserDao userDao, AuthService authService ) {
         this.userDao = userDao;
+        this.authService = authService;
     }
 
     @Override
@@ -42,7 +44,7 @@ class UserManager implements UserService {
             System.out.println ( "nickiniz en az 2 karakterden oluşmalıdır :(" );
             return;
         }
-        if (checkMail ( email )) {
+        if (checkMailExist ( email )) {
             System.out.println ( "Bu email ile zaten kayıtlısınız." );
             return;
         }
@@ -87,7 +89,7 @@ class UserManager implements UserService {
     }
 
     public
-    boolean checkMail ( String email ) {
+    boolean checkMailExist ( String email ) {
 //        if (!userDao.isMailExist ( email )) {
 //            System.out.println ( "Bu email ile zaten kayıtlısınız." );
 //        }
@@ -96,9 +98,31 @@ class UserManager implements UserService {
 
     public
     void sendVerificationMail ( String email ) {
+        String verificationLink = "http://yourapp.com/verify?token=someUniqueToken";
         System.out.println ( email + " adresine doğrulama e-postası gönderildi." );
+        System.out.println ( "e-postanızı doğrulamak için bu linke tıklayın " + verificationLink );
         // doğrulama maili gönderecek kod
+    }
 
+    public
+    void completeRegistration ( String token ) {
+        if (isValidToken ( token )) {
+            // kayıt tamamlayıcı kodlar
+            System.out.println ( "kaydınız başarı ile tamamlanmıştır" );
+        } else {
+            System.out.println ( "geçersiz doğrulama linki." );
+        }
+    }
+
+    public
+    boolean isValidToken ( String token ) { // doğrulama linkine tıklandığında
+        // token geçerliliğini kontrol etme
+        return true;
+    }
+
+    public
+    void login ( String externalService ) {
+        authService.loginWithExternalService ( externalService );
     }
 
 }

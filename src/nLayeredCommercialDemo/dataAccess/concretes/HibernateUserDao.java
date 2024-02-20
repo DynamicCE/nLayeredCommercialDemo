@@ -3,7 +3,7 @@ package nLayeredCommercialDemo.dataAccess.concretes;
 import nLayeredCommercialDemo.dataAccess.abstracts.UserDao;
 
 public
-class HibarnateUserDao implements UserDao {
+class HibernateUserDao implements UserDao {
     @Override
     public
     boolean isMailExist ( String email ) {
